@@ -1,7 +1,8 @@
 import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/stores";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+
+
 /**
  * useAuthListener:
  * 1. 컴포넌트 마운트 시 최초 세션 정보를 확인합니다. (새로고침 시 사용자 정보 유지)

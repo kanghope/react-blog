@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { toast } from "sonner";
-import { string, z } from "zod";
+import {  z } from "zod";
 
 const formSchema = z.object({
   email: z.email( {

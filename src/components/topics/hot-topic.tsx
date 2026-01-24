@@ -1,6 +1,5 @@
 import { Trophy } from "lucide-react";
 import { Card } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
 import type { Topic } from "@/types/topic.type";
 import { toast } from "sonner";
 import supabase from "@/lib/supabase";
