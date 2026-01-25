@@ -95,6 +95,8 @@ export default function TopicDetail() {
     //최초의 한번 호출
         useEffect(() => 
         {
+            // 💡 페이지 진입 시 스크롤을 맨 위(0,0)로 즉시 이동시킵니다.
+            window.scrollTo(0, 0);
             // 💡 2. 이미 호출했다면 바로 리턴 (중복 실행 방지)
             if (isCalled.current || !id) return;
 
