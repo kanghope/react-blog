@@ -94,7 +94,7 @@ export function NewTopicCard({props}: Props) {
     h-auto	height: auto;	브라우저 기본값 (보통 콘텐츠에 맞추지만 부모 영향 많이 받음)
     w-full고정 너비 100%부모 너비를 무조건 다 쓰려고 함 (다른 요소 밀어냄)
     flex-1가변적 너비 (Fill)다른 애들 먼저 자리 잡게 해주고 남는 것만 씀
-    https://nsswwzfsgbobvolrvxjx.supabase.co/storage/v1/object/public/files/topics/dMWfvyB5iPD3bFKwJgGm8.jpg
+
     */
     <Card className="w-full h-fit p-4 gap-4 cursor-pointer" onClick={()=>navigate(`/topics/${props.id}/detail`)}>
         <div className="flex items-start gap-4">

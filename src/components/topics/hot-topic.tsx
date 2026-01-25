@@ -79,13 +79,13 @@ export function HotTopicCard({props}: Props) {
             <Trophy className="w-5 h-5 text-muted-foreground" /> 
             {/* User 대신 상황에 맞는 아이콘(Trophy, MessageCircle 등)을 쓰시면 됩니다. */}
         </div>
-        <div className="flex flex-col items-center justify-center gap-0.5">
-            {/* 아래쪽: 닉네임 (중간 크기) */}
-            <span className="text-sm font-semibold text-primary">
+        <div className="flex flex-col items-end justify-center gap-0.5 w-full">
+            {/* 아래쪽: 닉네임 (중간 크기) self-end를 추가해서 오른쪽 끝으로 */}
+            <span className="text-sm font-semibold text-primary ">
                 {nickname}
             </span>
             {/* 위쪽: 카테고리 제목 (작고 강조된 스타일) */}
-            <span className="text-sm font-semibold text-card-foreground/50 uppercase tracking-wider">
+            <span className="text-sm font-semibold w-full text-right line-clamp-1 text-card-foreground/50 uppercase tracking-wider ">
               {props.category}
             </span>
             
