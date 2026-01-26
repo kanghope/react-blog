@@ -133,7 +133,7 @@ function App() {
             // 💡 { count: 'exact' } 를 추가해야 전체 개수를 가져옵니다.
             const query = supabase
                 .from("topic")
-                .select("*", { count: 'exact' }) 
+                .select(`*,comment_count:comment ( count )`, { count: 'exact' }, ) 
                 .eq('status', TOPIC_STATUS.PUBLISH)
                 .order("created_at", { ascending: false })
                 .range(from, to); // 💡 범위 지정

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { AppEditor } from "@/components/common";
+import { AppCommentArea, AppEditor } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import supabase from "@/lib/supabase";
@@ -197,6 +197,9 @@ export default function TopicDetail() {
         <div className="w-full py-6">
             {content && <AppEditor props={JSON.parse(content)} readonly />} 
         </div>
+
+        {/* 💡 분리된 댓글 컴포넌트 호출 */}
+        {id && <AppCommentArea topicId={id} user={user} />}
 
     </main>
   )

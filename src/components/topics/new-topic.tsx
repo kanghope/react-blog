@@ -1,4 +1,4 @@
-import { CaseSensitive } from "lucide-react";
+import { CaseSensitive, Eye, MessageSquare } from "lucide-react";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
 import type { Topic } from "@/types/topic.type";
@@ -112,9 +112,26 @@ export function NewTopicCard({props}: Props) {
             <img src={props.thumbnail} alt="@THUMBNAIL" className="w-[140px] h-[140px] aspect-square rounded-lg object-cover" />
         </div>
         <Separator/>
-        <div className="w-full flex items-center justify-between">
-            <p>{nickname}</p>
-            <p>{dayjs(props.created_at).format("YYYY. MM. DD")}</p>
+        <div className="w-full flex items-center justify-between text-sm ">
+            <div className="flex items-center gap-2">
+                <span className="font-medium text-foreground">{nickname}</span>
+                <span className="text-[10px] opacity-50">|</span>
+                <span>{dayjs(props.created_at).format("YYYY. MM. DD")}</span>
+            </div>
+            <div className="flex items-center gap-4">
+                {/* 조회수 */}
+                <div className="flex items-center gap-1.5">
+                    <Eye size={14} className="opacity-70" />
+                    <span className="text-xs">{props.views || 0}</span>
+                </div>
+                {/* 댓글수 */}
+                <div className="flex items-center gap-1.5">
+                    <MessageSquare size={14} className="opacity-70" />
+                    <span className="text-xs">{props.comment_count?.[0]?.count || 0}</span>
+                </div>
+            </div>
+           {/*} <p>{nickname}</p>
+            <p>{dayjs(props.created_at).format("YYYY. MM. DD")}</p>*/}
         </div>
     </Card>
   )

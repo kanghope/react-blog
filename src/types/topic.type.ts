@@ -13,4 +13,6 @@ export interface Topic
     category : string;
     thumbnail : string;	
     status : TOPIC_STATUS;
+    views : number;
+    comment_count : number | any;
 }
