@@ -3,7 +3,7 @@ import { MessageSquareQuote, User, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 import supabase from "@/lib/supabase";
@@ -16,7 +16,6 @@ interface Props {
 export function AppCommentArea({ topicId, user} : Props) {
     const [comments, setComments] = useState<any[]>([]);//댓글 리스트
     const [commentInput, setCommentInput] = useState(""); // 댓글 입력
-    const [loading, setLoading] = useState(false);
 
     // 1.댓글 목록 조회
     const fetchComments = async () => {
