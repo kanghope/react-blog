@@ -50,7 +50,7 @@ export function AppDraftsDialog({children} : Props) {
     //최초의 한번 호출
     useEffect(() => 
     {
-        if(user) fetchDrafts();
+        if(user){ fetchDrafts();}else { return;} ;
     }, []);
 
     return (
@@ -58,9 +58,9 @@ export function AppDraftsDialog({children} : Props) {
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>임시 저장된 토픽</DialogTitle>
+                    <DialogTitle>임시 저장된 블로그</DialogTitle>
                     <DialogDescription>
-                        임시 저장된 토픽 목록입니다. 이어서 작성하거나 삭제할 수 있습니다.
+                        임시 저장된 블로그 목록입니다. 이어서 작성하거나 삭제할 수 있습니다.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-3 py-4">

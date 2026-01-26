@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/stores";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft,  Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 
@@ -165,6 +165,11 @@ export default function TopicDetail() {
                     </AlertDialog>
                     
                 )} 
+                { user?.id === author && (
+                <Button className="!bg-blue-400/50 flex items-center gap-2" size={"default"} variant={"outline"}  onClick={() => navigate(`/topics/${id}/create?wyn=Y`)}>
+                    수정
+                </Button>
+                    )}
                 
             </div>
             
@@ -192,6 +197,7 @@ export default function TopicDetail() {
         <div className="w-full py-6">
             {content && <AppEditor props={JSON.parse(content)} readonly />} 
         </div>
+
     </main>
   )
 }

@@ -9,10 +9,11 @@ import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/stores";
 import type { Block } from "@blocknote/core";
 import { ArrowLeft, Asterisk, BookOpenCheck, ImageOff, Save } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { nanoid } from "nanoid";
 import { TOPIC_STATUS } from "@/types/topic.type";
+
 
 export default function CreateTopic() {
     // [1] URL 파라미터 및 전역 상태(Store) 관리
@@ -26,11 +27,21 @@ export default function CreateTopic() {
     const [content, setContent] = useState<Block[]>([]); // 본문 (BlockNote 전용 객체 배열)
     const [category, setCategory] = useState<string>(""); // 선택된 카테고리값
     const [thumbnail, setThumbnail] = useState<File | string | null >(); // 썸네일 (파일 객체 또는 기존 URL)
+    const [searchParams] = useSearchParams();
+    const wYn = searchParams.get("wyn");//상세페이지에서 그수정이 값이 여부에따라 저장글 불러오기
 
     const fetchTopic = async () => {
         try{
-             const { data: topics, error} = await supabase.from("topic").select("*").eq("id", id).eq('status', TOPIC_STATUS.TEMP);
-
+             const query =  supabase.from("topic").select("*").eq("id", id);
+             if(wYn === "Y")
+             {
+                query.eq('status', TOPIC_STATUS.PUBLISH);
+             }
+             else 
+             {
+                query.eq('status', TOPIC_STATUS.TEMP);
+             }
+             const { data: topics, error} = await query;
              if(error)
             {
                 toast.error(error.message);
@@ -65,7 +76,7 @@ export default function CreateTopic() {
     const handleSave = async () => {
 
         // 유효성 검사: 모든 필드가 비어있을 경우 중단
-        if(!title && !content && !category && !thumbnail)
+        if(!title || !content || !category || !thumbnail)
         {
             toast.warning("제목, 내용, 카테고리, 썸네일은 입력하세요.");
             return;
@@ -117,7 +128,7 @@ export default function CreateTopic() {
         }
         if(data)
         {
-            toast.success("작성 중인 토픽을 저장하였습니다.");
+            toast.success("작성 중인 블로그를 임시저장하였습니다.");
             return;
         }
 
@@ -127,7 +138,7 @@ export default function CreateTopic() {
      * 모든 값이 필수여야 함
      */
     const handlePubish = async () => {
-        if(!title && !content && !category && !thumbnail)
+        if(!title || !content || !category || !thumbnail)
         {
             toast.warning("제목, 내용, 카테고리, 썸네일은 필수값 입니다.");
             return;
@@ -179,7 +190,7 @@ export default function CreateTopic() {
         }
         if(data)
         {
-            toast.success("토픽을 발행 하였습니다.");
+            toast.success("블로그를 저장 하였습니다.");
             navigate("/");
         }
     };
@@ -197,25 +208,25 @@ export default function CreateTopic() {
             */}
             <Button type="button" variant={"outline"} className="w-22 !bg-yellow-800/50" onClick={handleSave}>
                 <Save />
-                저장
+                임시저장
             </Button>
             <Button type="button" variant={"outline"} className="w-22 !bg-emerald-800/50" onClick={handlePubish}>
                 <BookOpenCheck />
-                발행
+                저장
             </Button>
         </div>
-        {/* 토픽 작성하기 */}
-        <section className="w-3/4 h-full flex flex-col gap-6 p-6">
+        {/* 토픽 작성하기w-3/4 */}
+        <section className="w-full h-full flex flex-col gap-6 p-6">
             <div className="flex flex-col pb-6 border-b">
                 <span className="text-blue-400 font-semibold">Step 01</span>
-                <span className="text-base font-semibold">토픽 작성하기</span>
+                <span className="text-base font-semibold">블로그 작성하기</span>
             </div>
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-1">
                     <Asterisk size={14} className="text-blue-400" />
                     <Label className="text-muted-foreground">제목</Label>
                 </div>
-                <Input placeholder="토픽 제목을 입력해주세요." className="h-16 pl-6 !text-lg placeholder:font-semibold" value={title} onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value) } />
+                <Input placeholder="블로그 제목을 입력해주세요." className="h-16 pl-6 !text-lg placeholder:font-semibold" value={title} onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value) } />
             </div>
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-1">
@@ -225,9 +236,6 @@ export default function CreateTopic() {
                 {/* BlockNote Text Editor UI */}
                 <AppEditor props={content} setContent={setContent} />
             </div>
-        </section>
-        {/* 카테고리 및 썸네일 등록 */}
-        <section className="w-1/4 h-full flex flex-col gap-6 p-6">
             <div className="flex flex-col pb-6 border-b">
                 <span className="text-blue-400 font-semibold">Step 02</span>
                 <span className="text-base font-semibold">카테고리 및 썸네일 등록</span>
@@ -239,7 +247,7 @@ export default function CreateTopic() {
                 </div>
                 <Select value={category} onValueChange={(value: string) => setCategory(value)}>
                     <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="토픽(주제)선택" />
+                        <SelectValue placeholder="블로그(주제)선택" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
@@ -255,7 +263,7 @@ export default function CreateTopic() {
                     </SelectContent>
                 </Select>
             </div>  
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 md:w-1/2">
                 <div className="flex items-center gap-1">
                     <Asterisk size={14} className="text-blue-400" />
                     <Label className="text-muted-foreground">썸네일</Label>
@@ -274,6 +282,11 @@ aspect-[4/3]	4 / 3	임의의 비율 (대괄호 안에 원하는 수치 입력 �
                 </Button>
             </div>  
         </section>
+        {/* 카테고리 및 썸네일 등록 */}
+        {/*<section className="w-1/4 h-full flex flex-col gap-6 p-6">
+            
+        </section>*/}
+        
     </main>
   );
 }

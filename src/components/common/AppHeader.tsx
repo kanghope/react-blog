@@ -50,20 +50,20 @@ function AppHeader() {
             {/*로고 & 네이게이션 메뉴 UI*/} 
             <div className="flex items-center gap-5">
                 <img src="/kim.jpg" alt="@LOGO" className="w-6 h-6" />
-                <div className="flex items-center gap-5">                
-                  <NavLink to={"/"} className="font-semibold">토픽 인사이트</NavLink>
+                <div className="flex items-center gap-5 ">                
+                  <NavLink to={"/"} className="font-semibold text-[10px] md:text-sm">블로그 메인</NavLink>
                   <Separator orientation="vertical" className="!h-4" />
-                  <NavLink to={"/portfolio"} className="font-semibold">포트폴리오</NavLink>
+                  <NavLink to={"/portfolio"} className="font-semibold  text-[10px] md:text-sm">포트폴리오</NavLink>
                 </div>
             </div>
             {/*로그인ui*/}
             { user ? 
             <div className="flex items-center gap-5">
-              <span>{user.email}</span>
+              <span className=" text-[10px] md:text-sm">{user.email}</span>
               <Separator orientation="vertical" className="!h-4" />
-              <span onClick={handleLogout} className=" hover:text-yellow-200 transition-all duration-500 cursor-pointer">로그아웃</span>
+              <span onClick={handleLogout} className=" text-[10px] md:text-sm hover:text-yellow-200 transition-all duration-500 cursor-pointer">로그아웃</span>
             </div> 
-            : <NavLink to={"/sign-in"} className="font-semibold text-muted-foreground hover:text-yellow-200 transition-all duration-500 cursor-pointer">
+            : <NavLink to={"/sign-in"} className="font-semibold  text-[10px] md:text-sm text-muted-foreground hover:text-yellow-200 transition-all duration-500 cursor-pointer">
                 로그인
             </NavLink>}
             

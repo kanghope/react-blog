@@ -35,8 +35,8 @@ function AppFooter() {
             font-semibold	글꼴 두께	600 (중간 굵기)
             tracking-tight	글자 간격(자간)	-0.025em (좁게)
             */}
-            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">개발자로써 삶이 좀더</h3>
-            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">한단계씩 업그레이드 되다.</h3>
+            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">C#, ASP.NET WEBFORM CORE MVC , WINFORM, WPF, REACT, </h3>
+            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">JQUERY, JAVA SPRINGBOOT, MSSQL, ORACLE, POSTGRESQL, ASP</h3>
           </div>
           <div className="flex items-center gap-2">
             <Button variant={"outline"} size={"icon"} className="border-0">

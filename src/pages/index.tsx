@@ -1,5 +1,5 @@
 
-import { CircleSmall, NotebookPen, PencilLine } from "lucide-react";
+import { CircleSmall, Flame, NotebookPen, PencilLine } from "lucide-react";
 import { AppDraftsDialog, AppSidebar } from "../components/common";
 import { SkeletonHotTopic, SkeletonNewTopic } from "../components/skeleton";
 import { Button } from "../components/ui/button";
@@ -215,14 +215,15 @@ function App() {
                     다른 애들보다 위로 보이게 해라(z-20)
                 */}
                 <div className="fixed right-1/2 bottom-10 translate-x-1/2 z-20 flex items-center gap-2">
-                    <Button variant={"destructive"} className="!py-5 !px-6 rounded-full hover:scale-105 transition-all duration-300 flex items-center gap-2"
+                    <Button variant={"outline"} className="!py-5 !px-6 rounded-full !bg-blue-400/50 hover:scale-105 transition-all duration-300 flex items-center gap-2"
                     onClick={handleRoute}>
                       <PencilLine />
-                      나만의 토픽 작성
+                      블로그 작성
                     </Button>
                     <AppDraftsDialog >
                         <div className="relative">
-                            <Button variant={"outline"} className="w-10 h-10 rounded-full">
+                            <Button variant={"outline"} className="w-10 h-10 rounded-full" onClick={() => { if(!user) {toast.warning("토픽 작성은 로그인 후 사용 가능합니다.");
+            return;} } }>
                                 <NotebookPen />
                             </Button>
                             <CircleSmall size={12} className="absolute top-0 right-0 text-blue-500"  fill="#3b82f6" />
@@ -289,10 +290,11 @@ function App() {
                     <div className="w-full flex flex-col gap-6">
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
-                                <img src="/assets/gifs/gif-001.gif" alt="@IMG" className="w-7 h-7" />
-                                <h4 className="scroll-m20 text-xl font-semibold tracking-tight"> 핫 토픽</h4>
+                                {/*<img src="/assets/gifs/gif-001.gif" alt="@IMG" className="w-7 h-7" />*/}
+                                <Flame className="w-6 h-6 text-fuchsia-600 fill-fuchsia-600 animate-pulse" />
+                                <h4 className="scroll-m20 text-xl font-semibold tracking-tight"> 인기 블로그 주제</h4>
                             </div>
-                            <p className="text-base text-muted-foreground">지금 가장 주목받는 주제들을 살펴보고, 다양한 관점의 인사이트를 얻어보세요.</p>
+                            <p className="text-base text-muted-foreground">조회수가 많은 블로그 TOP 6!</p>
                         </div>
                         {/*grid grid-cols-4 gap-6 */}
                         {/*핫토픽 카드 컴포넌트*/}
@@ -333,9 +335,9 @@ function App() {
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                                 <img src="/assets/gifs/gif-002.gif" alt="@IMG" className="w-7 h-7" />
-                                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">NEW 토픽</h4>
+                                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">NEW 블로그</h4>
                             </div>
-                            <p className="md:text-base text-muted-foreground">새로운 시선으로, 새로운 이야기를 시작하세요.</p>
+                            <p className="md:text-base text-muted-foreground">주제별 이야기를 작성하세요.</p>
                         </div>
                         {/*핫토픽 카드 컴포넌트
                         min-h-120
@@ -360,7 +362,7 @@ function App() {
                         </div>
                         ) : (
                             <div className="w-full min-h-120 flex items-center justify-center">
-                                <p className="text-muted-foreground/50">조회 가능한 토픽이 없습니다.</p>
+                                <p className="text-muted-foreground/50">조회 가능한 블로그 글이 없습니다.</p>
                             </div>
                         )}
                     </div>
