@@ -49,7 +49,7 @@ export default function TopicDetail() {
 
     const fetchTopic = async () => {
         try{
-             const { data: topics, error} = await supabase.from("topic").select("*").eq("id", id);
+             const { data: topics, error} = await supabase.from("topic").select("*").eq("id", id).single();
 
             if(error)
             {
@@ -191,7 +191,7 @@ export default function TopicDetail() {
              <span className="mb-4"># {category}</span>
              <h1 className="scroll-m-20 text-center font-extrabold tracking-tight sm:text-2xl text-xl md:text-4xl md:px-0">{title}</h1>
              <Separator className="!w-6 my-6 bg-foreground" />
-             <span>{dayjs(createdat).format("YYYY. MM. DD")}</span>
+             <span>{createdat && dayjs(createdat).format("YYYY. MM. DD")}</span>
         </section>
         {/* 에디터 내용을 불러와 렌더링 */}
         <div className="w-full py-6">
