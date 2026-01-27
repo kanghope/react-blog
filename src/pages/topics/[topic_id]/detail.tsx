@@ -49,7 +49,7 @@ export default function TopicDetail() {
 
     const fetchTopic = async () => {
         try{
-             const { data: topics, error} = await supabase.from("topic").select("*").eq("id", id).single();
+             const { data: topics, error} = await supabase.from("topic").select("*").eq("id", id);
 
             if(error)
             {
