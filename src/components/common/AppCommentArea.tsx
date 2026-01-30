@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 import supabase from "@/lib/supabase";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
 interface Props {
   topicId: string;
@@ -128,12 +129,30 @@ export function AppCommentArea({ topicId, user} : Props) {
                 </span>
 
                 {user?.id === comment.user_id && (
-                  <button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="ml-auto p-1 text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button
+                    
+                    className="ml-auto p-1 text-muted-foreground bg-transparent border-none text-red-500  cursor-pointer"
                   >
                     <Trash2 size={14} />
-                  </button>
+                  </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>댓글을 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            삭제된 댓글은 복구할 수 없습니다. 정말로 삭제하시겠습니까?
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                        <AlertDialogCancel>취소</AlertDialogCancel>
+                        <AlertDialogAction className="bg-red-600/50 text-foreground hover:bg-red-700/50" onClick={() => handleDeleteComment(comment.id)}>삭제</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                    </AlertDialog>
                 )}
               </div>
               <p className="pl-9 text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
