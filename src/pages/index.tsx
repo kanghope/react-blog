@@ -160,7 +160,7 @@ function App() {
     const handleRoute = async () => {
         if (!user)
         {
-            toast.warning("토픽 작성은 로그인 후 사용 가능합니다.");
+            toast.warning("블로그 작성은 로그인 후 사용 가능합니다.");
             return;
         }
         //RLS Policy 설정할 때, auth.uid() = author
@@ -180,7 +180,7 @@ function App() {
 
         if(data)
         {
-            toast.success("토픽을 생성하였습니다.");
+            //toast.success("토픽을 생성하였습니다.");
             navigate(`/topics/${data[0].id}/create`);
         }
         
