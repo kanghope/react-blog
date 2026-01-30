@@ -35,8 +35,9 @@ function AppFooter() {
             font-semibold	글꼴 두께	600 (중간 굵기)
             tracking-tight	글자 간격(자간)	-0.025em (좁게)
             */}
-            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">보유스킬: C#, ASP.NET WEBFORM CORE MVC , WINFORM, WPF,Node.js활용한 REACT </h3>
-            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">Shadcn/UI, Tailwinnd css, TYPESCRIPT,JQUERY, Timeleaf, JAVA SPRINGBOOT, MSSQL, ORACLE, POSTGRESQL, ASP</h3>
+            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">보유스킬: C#,ASP, ASP.NET WEBFORM CORE MVC , WINFORM, WPF,Node.js, Zustand  </h3>
+            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">Shadcn/UI, Tailwinnd css, TYPESCRIPT 등을 활용한 REACT,JQUERY</h3>
+            <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">Timeleaf, JAVA SPRINGBOOT, MSSQL, ORACLE, POSTGRESQL</h3>
             <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">기타: IIS 웹서버 환경설정. Github, Source Tree, 비주얼스튜디오, </h3>
             <h3 className="scroll-m-20 text-base md:text-2xl font-semibold tracking-tight">VSCode, Docker, AZURE 배포,인텔리제이 </h3>
           </div>
