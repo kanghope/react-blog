@@ -95,8 +95,38 @@ export function NewTopicCard({props}: Props) {
     w-full고정 너비 100%부모 너비를 무조건 다 쓰려고 함 (다른 요소 밀어냄)
     flex-1가변적 너비 (Fill)다른 애들 먼저 자리 잡게 해주고 남는 것만 씀
 
+    1. border border-transparent (평소 상태)
+의미: "투명한 테두리를 미리 그려놔라!"
+
+왜 쓰나요?: 마우스를 올렸을 때 갑자기 테두리(border)가 생기면, 테두리 두께만큼 내부 콘텐츠가 1~2px씩 툭툭 밀리는 현상이 생깁니다. 이를 방지하기 위해 평소에 투명한 테두리를 미리 입혀서 자리를 잡아두는 것입니다.
+
+2. transition-all duration-300 (애니메이션 설정)
+의미: "변화가 일어날 때 0.3초 동안 부드럽게 보여줘라!"
+
+왜 쓰나요?: 이게 없으면 마우스를 올리는 순간 테두리와 빛이 '탁!' 하고 나타납니다. 300ms(0.3초)를 주면 샤아악~ 하고 빛이 번지는 듯한 고급스러운 효과가 연출됩니다.
+
+3. hover:border-blue-500/50 (마우스 오버 테두리)
+의미: "마우스를 올리면 파란색 테두리를 50% 투명도로 보여줘라!"
+
+디테일: blue-500은 표준 파란색이고, /50은 불투명도입니다. 너무 쨍한 파란색보다 살짝 투명한 파란색이 배경과 더 잘 어우러집니다.
+
+4. hover:shadow-[0_0_20px_rgba(59,130,246,0.2)] (글로우 효과의 핵심)
+의미: "카드 주변에 파란색 그림자를 광선처럼 퍼뜨려라!"
+
+수치 해석:
+
+0 0: 그림자의 위치(X, Y)입니다. 둘 다 0이면 그림자가 어느 한쪽으로 쏠리지 않고 사방으로 일정하게 퍼집니다.
+
+20px: 그림자의 번짐 정도(Blur)입니다. 숫자가 클수록 빛이 멀리까지 은은하게 퍼집니다.
+
+rgba(59, 130, 246, 0.2): 파란색(59, 130, 246)을 20% 투명도로 섞은 것입니다.
+
     */
-    <Card className="w-full h-fit p-4 gap-4 cursor-pointer" onClick={()=>navigate(`/topics/${props.id}/detail`)}>
+    <Card className="w-full h-fit p-4 gap-4 cursor-pointer
+    border border-transparent
+    transition-all duration-300
+    hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]
+    " onClick={()=>navigate(`/topics/${props.id}/detail`)}>
         <div className="flex items-start gap-4">
             <div className="flex-1 flex flex-col items-start gap-3">
                 {/* 썸네일과 제목 */}

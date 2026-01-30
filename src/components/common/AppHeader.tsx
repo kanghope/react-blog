@@ -57,7 +57,7 @@ function AppHeader() {
                 </div>
             </div>
             {/*로그인ui*/}
-            { user ? 
+            { user && user.id ? 
             <div className="flex items-center gap-5">
               <span className=" text-[10px] md:text-sm">{user.email}</span>
               <Separator orientation="vertical" className="!h-4" />
