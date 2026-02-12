@@ -1,5 +1,5 @@
 
-import { CircleSmall, Flame, NotebookPen, PencilLine } from "lucide-react";
+import { CircleSmall, Flame, NotebookPen, PencilLine, Sparkles } from "lucide-react";
 import { AppDraftsDialog, AppSidebar } from "../components/common";
 import { SkeletonHotTopic, SkeletonNewTopic } from "../components/skeleton";
 import { Button } from "../components/ui/button";
@@ -334,8 +334,10 @@ function App() {
                     <div className="w-full flex flex-col gap-6">
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
-                                <img src="/assets/gifs/gif-002.gif" alt="@IMG" className="w-7 h-7" />
-                                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">NEW 블로그</h4>
+                                {/*<img src="/assets/gifs/gif-002.gif" alt="@IMG" className="w-7 h-7" />*/}
+                                {/* 아이콘에 bounce(통통 튀기) 애니메이션 적용 */}
+                                <Sparkles className="w-6 h-6 text-yellow-400 animate-bounce" />
+                                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">새로 올라온 블로그</h4>
                             </div>
                             <p className="md:text-base text-muted-foreground">주제별 이야기를 작성하세요.</p>
                         </div>
