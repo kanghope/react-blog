@@ -45,28 +45,24 @@ interface AuthStore{
     <void>: 작업이 끝나고 나서 따로 돌려줄 값(Return Value)은 없다는 뜻입니다.*/
 }
 
-export const useAuthStore = create<AuthStore>() (
-        persist(
-        (set) => 
-        ({
-                user: {
-                    id: "",
-                    email: "",
-                    role: "",
-                },
-                setUser: (newUser:User | null) => set({ user: newUser }),
-                // 로그아웃 (상태 + Supabase 세션 모두 제거)
-                reset: async () => 
-                {
-                    await supabase.auth.signOut();
-                    set({
-                            //user: { id: "", email: "", role: ""}
-                            user: null
-                        }); // Zustand 상태 초기화
-                    localStorage.removeItem("auth-storage");
-                },
-        
+export const useAuthStore = create<AuthStore>() ( // 1. 게시판(Store) 생성
+    persist( // 2. 창고(LocalStorage) 저장 기능 추가
+        (set) => ({
+            user: null, // 초기 상태 (로그인 전)
+
+            // 유저 정보를 업데이트하는 함수
+            setUser: (newUser) => set({ user: newUser }), 
+
+            // 로그아웃 함수 (비동기)
+            reset: async () => {
+                await supabase.auth.signOut(); // Supabase에게 "나 나간다"고 알림
+                set({ user: null }); // 우리 게시판 정보도 비움
+                // localStorage.removeItem은 persist가 알아서 관리하므로 보통 수동으로 안 지워도 됩니다.
+            },
         }),
-        { name: "auth-storage", partialize: (state) => ({ user: state.user })}//user만 저장
+        { 
+          name: "auth-storage", // 로컬 스토리지에 저장될 이름
+          partialize: (state) => ({ user: state.user }) // 💡 중요: 유저 정보만 골라서 저장하겠다는 뜻
+        }
     )
 );

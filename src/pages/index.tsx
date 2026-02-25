@@ -1,5 +1,5 @@
 
-import { CircleSmall, Flame, NotebookPen, PencilLine, Sparkles } from "lucide-react";
+import { BarChart3, CircleSmall, Flame, NotebookPen, PencilLine, Sparkles } from "lucide-react";
 import { AppDraftsDialog, AppSidebar } from "../components/common";
 import { SkeletonHotTopic, SkeletonNewTopic } from "../components/skeleton";
 import { Button } from "../components/ui/button";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { NewTopicCard } from "@/components/topics";
 import { HotTopicCard } from "@/components/topics";
 import { AppPaging } from "@/components/common/AppPaging";
+import { HotTopicChart } from "@/components/topics/HotTopicChart";
 
 /*
 1. <main> : 주인공 (본문 영역)
@@ -47,7 +48,11 @@ section: 디자인과 상관없이 내용상 하나의 덩어리일 때 (예: �
 제목(h1, h2 등)은 글자 크기가 큽니다. 글자가 크면 자간이 기본값일 때 약간 벙벙해 보이고 디자인이 엉성해 보일 수 있어요.
 이걸 tight하게 조여주면 글자가 훨씬 단단하고 세련된 느낌을 줍니다. 요즘 유행하는 모던한 웹 디자인(Apple이나 Toss 스타일)의 필수 요소입니다.
 */
-
+// 1. 타입 정의 (컴포넌트 상단 또는 types 파일)
+interface CategoryStat {
+  name: string;   // 카테고리 이름 (예: 'React', 'TypeScript')
+  value: number;  // 해당 카테고리의 글 수
+}
 
 function App() {
 
@@ -62,6 +67,8 @@ function App() {
     const category = searchParams.get("category") || "";
     const [topics, setTopics] = useState<Topic[]>([]);
     const [hotTopics, setHotTopics] = useState<Topic[]>([]);
+    // 2. App 컴포넌트 내부에서 상태 선언
+    const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
 
     const handleCategoryChange = (value: string) => {
         if(value === category) return;
@@ -99,6 +106,47 @@ function App() {
         {
             console.log(error);
             throw error;
+        }
+    };
+
+    // 카테고리별 발행된 글 개수 조회
+    const fetchCategoryStats = async () => {
+        try {
+            // 1. 필요한 데이터(category)만 전체 조회
+            const { data, error } = await supabase
+            .from("topic")
+            .select("category")
+            .eq("status", TOPIC_STATUS.PUBLISH)
+            .not("category", "is", null);
+
+            if(error)
+            {
+                toast.error(error.message);
+                return;
+            }
+
+            if (data) {
+                // 2. 자바스크립트로 그룹바이(Group By) 로직 구현
+                const stats = data.reduce((acc: { [key: string]: number }, cur) => {
+                    const cat = cur.category;
+                    acc[cat] = (acc[cat] || 0) + 1;
+                    return acc;
+                }, {});
+
+                // 3. 차트가 원하는 [{ name, value }] 형태로 변환
+                const formattedData = Object.keys(stats).map(key => ({
+                    name: key,
+                    value: stats[key]
+                }));
+
+                // 개수 많은 순으로 정렬
+                formattedData.sort((a, b) => b.value - a.value);
+                
+                // 이 데이터를 Pie 차트에 넘겨주면 됩니다!
+                setCategoryStats(formattedData); 
+            }
+        } catch (error) {
+            console.error("카테고리 통계 조회 실패:", error);
         }
     };
     //발행된 토픽 조회
@@ -195,6 +243,7 @@ function App() {
     //페이지가 렌더링 될때
     useEffect(() => {
         fetchHotTopics();
+        fetchCategoryStats();
     },[]);
     useEffect(() => {
         fetchTopics();
@@ -290,13 +339,36 @@ function App() {
                     <div className="w-full flex flex-col gap-6">
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
+                                {/* 💡 아이콘을 막대 그래프 모양으로 변경하고 그라데이션 효과 */}
+                                <div className="p-1.5 bg-blue-500/10 rounded-lg">
+                                    <BarChart3 className="w-5 h-5 text-blue-500" />
+                                </div>
+                                <h4 className="text-xl font-bold tracking-tight">트렌드 분석</h4>
+                                {/* 💡 실시간 느낌을 주는 깜빡이는 뱃지 */}
+                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-[10px] font-medium text-emerald-500 border border-emerald-500/20">
+                                    <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+                                    LIVE
+                                </span>
+                            </div>
+                            {/*<p className="text-base text-muted-foreground">조회수가 많은 블로그 TOP 6!</p>*/}
+                        </div>
+                        {/*grid grid-cols-4 gap-6 */}
+
+                        {/* 1. 파이 막대  */}
+                        {hotTopics.length > 0 && <HotTopicChart data={categoryStats} mode="pie" />}
+                        {/* 1. 세로 막대 (기본형) */}
+                        {hotTopics.length > 0 && <HotTopicChart data={hotTopics} mode="horizontal" />}
+
+                        {/* 2. 가로 막대 (랭킹형) */}
+                        {hotTopics.length > 0 && <HotTopicChart data={hotTopics} mode="vertical" />}
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
                                 {/*<img src="/assets/gifs/gif-001.gif" alt="@IMG" className="w-7 h-7" />*/}
                                 <Flame className="w-6 h-6 text-fuchsia-600 fill-fuchsia-600 animate-pulse" />
                                 <h4 className="scroll-m20 text-xl font-semibold tracking-tight"> 인기 블로그 주제</h4>
                             </div>
                             <p className="text-base text-muted-foreground">조회수가 많은 블로그 TOP 6!</p>
                         </div>
-                        {/*grid grid-cols-4 gap-6 */}
                         {/*핫토픽 카드 컴포넌트*/}
                         {hotTopics.length > 0 ? (
                             <div className="w-full flex items-center gap-6 overflow-auto">
@@ -330,6 +402,7 @@ function App() {
                             */}
                         
                     </div>
+                    
                     {/* NEW 토픽*/}
                     <div className="w-full flex flex-col gap-6">
                         <div className="flex flex-col gap-1">
