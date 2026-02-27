@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MessageSquareQuote, User, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ export function AppCommentArea({ topicId, user} : Props) {
     const [commentInput, setCommentInput] = useState(""); // 댓글 입력
 
     // 1.댓글 목록 조회
-    const fetchComments = async () => {
+    const fetchComments = useCallback( async () => {
     const { data, error } = await supabase
         .from("comment")
         .select(`
@@ -36,9 +36,9 @@ export function AppCommentArea({ topicId, user} : Props) {
         } else {
             setComments(data || []);
         }
-    };
+    }, [topicId]);
     // 2. 댓글 등록
-    const handleCreateComment = async () => {
+    const handleCreateComment = useCallback( async () => {
         try{
             if(!user?.email)
             {
@@ -66,20 +66,20 @@ export function AppCommentArea({ topicId, user} : Props) {
             console.log(error);
             throw error;
         }
-    };
+    }, [commentInput, topicId, user, fetchComments]);
 
     // 3. 삭제
-    const handleDeleteComment = async (commentId: string) => {
+    const handleDeleteComment = useCallback( async (commentId: string) => {
         const { error } = await supabase.from("comment").delete().eq("id", commentId);
         if (!error) {
             toast.success("댓글이 삭제되었습니다.");
             fetchComments();
         }
-    };
+    }, [fetchComments]);
 
     useEffect(() => {
         if (topicId) fetchComments();
-    }, [topicId]);
+    }, [fetchComments, topicId ]);
 
     return (
     <div className="w-full max-w-4xl mx-auto px-4 mt-12 mb-20 flex flex-col gap-6">

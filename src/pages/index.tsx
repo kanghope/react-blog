@@ -7,8 +7,8 @@ import { useNavigate, useSearchParams } from "react-router";
 import { useAuthStore } from "@/stores";
 import { toast } from "sonner";
 import supabase from "@/lib/supabase";
-import { TOPIC_STATUS, type Topic } from "@/types/topic.type";
-import { useEffect, useState } from "react";
+import { TOPIC_STATUS, type Topic, type CategoryStat } from "@/types/topic.type";
+import { useCallback, useEffect, useState } from "react";
 import { NewTopicCard } from "@/components/topics";
 import { HotTopicCard } from "@/components/topics";
 import { AppPaging } from "@/components/common/AppPaging";
@@ -48,11 +48,7 @@ section: 디자인과 상관없이 내용상 하나의 덩어리일 때 (예: �
 제목(h1, h2 등)은 글자 크기가 큽니다. 글자가 크면 자간이 기본값일 때 약간 벙벙해 보이고 디자인이 엉성해 보일 수 있어요.
 이걸 tight하게 조여주면 글자가 훨씬 단단하고 세련된 느낌을 줍니다. 요즘 유행하는 모던한 웹 디자인(Apple이나 Toss 스타일)의 필수 요소입니다.
 */
-// 1. 타입 정의 (컴포넌트 상단 또는 types 파일)
-interface CategoryStat {
-  name: string;   // 카테고리 이름 (예: 'React', 'TypeScript')
-  value: number;  // 해당 카테고리의 글 수
-}
+
 
 function App() {
 
@@ -76,8 +72,8 @@ function App() {
         if(value === "") setSearthcParams({});
         else setSearthcParams({ category: value });
     };    
-    //HOT 토픽 조회
-    const fetchHotTopics = async () => {
+    //HOT 토픽 조회 (useCallback으로 감싸서 메모이제이션)
+    const fetchHotTopics = useCallback( async () => {
 
         try
         {
@@ -107,10 +103,10 @@ function App() {
             console.log(error);
             throw error;
         }
-    };
+    },[]);
 
     // 카테고리별 발행된 글 개수 조회
-    const fetchCategoryStats = async () => {
+    const fetchCategoryStats = useCallback( async () => {
         try {
             // 1. 필요한 데이터(category)만 전체 조회
             const { data, error } = await supabase
@@ -148,9 +144,9 @@ function App() {
         } catch (error) {
             console.error("카테고리 통계 조회 실패:", error);
         }
-    };
+    },[]);
     //발행된 토픽 조회
-    const fetchTopics = async () => {
+    const fetchTopics = useCallback( async () => {
         try
         {
             /*
@@ -201,7 +197,7 @@ function App() {
                 console.log(error);
                 throw error;
             }
-    }
+    }, [category, currentPage]);// 페이지나 카테고리가 바뀔 때만 함수가 새로 정의됨
     
 
     //나만의 토픽 생성 버튼 클릭

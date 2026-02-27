@@ -3,7 +3,7 @@ import { Card } from "../ui/card";
 import type { Topic } from "@/types/topic.type";
 import { toast } from "sonner";
 import supabase from "@/lib/supabase";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 
 interface Props{
@@ -41,17 +41,28 @@ export function HotTopicCard({props}: Props) {
     const navigate = useNavigate();
     const [nickname, setNickname] = useState<string>("");
 
-    const fetchAuthEmail = async () => {
+    
+    const fetchAuthEmail = useCallback( async () => {
+        if (!props.author) return;
         const nicknameDB = await findUserById(props.author);
         setNickname(nicknameDB || "알 수 없는 사용자");
 
     
-    }
+    }, [props.author]);
 
     //최초 한번 호출
     useEffect(() => {
         fetchAuthEmail();
-    },[]);
+    },[fetchAuthEmail]);
+
+    /**
+     * 💡 수정 3: 스타일 객체 메모이제이션
+     * 인라인 스타일 객체를 useMemo로 관리하면 리렌더링 시 참조 무결성을 유지합니다.
+     */
+    const backgroundImageStyle = useMemo(() => ({
+        backgroundImage: `url(${props.thumbnail})`
+    }), [props.thumbnail]);
+    
     return (
     /*
     p-0: Card 자체에 들어있는 패딩을 없애야 이미지가 경계선까지 닿습니다.
@@ -135,13 +146,15 @@ TypeScript
 
 --flex flex-col items-end justify-center gap-0.5 w-full transition-transform group-hover:rotate-12
     */
+
+
     <Card className="
     group w-full flex flex-col gap-2 min-w-58 p-0 overflow-hidden border-none shadow-none cursor-pointer
     " onClick={()=>navigate(`/topics/${props.id}/detail`)}>
         <div className="relative w-full h-70 overflow-hidden"> {}
             <div 
             className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110" 
-            style={{backgroundImage: `url(${props.thumbnail})`}}
+            style={backgroundImageStyle}
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />

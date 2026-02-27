@@ -8,7 +8,7 @@ import "dayjs/locale/ko"; // 한국어로 출력하려면
 import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ko"); // 한국어로 설정
@@ -19,6 +19,11 @@ interface Props{
 
 const extractTextFromContent = (content: string | any[], maxChars = 200 ) => {
     try {
+        /*
+        typeof content === "string": "데이터(content)의 타입이 글자(string)니?"라고 물어봅니다.
+        JSON.parse(content): "응, 글자야"라고 하면, 그 글자를 자바스크립트가 읽을 수 있는 **객체(Object)**로 변환합니다. (포장지를 뜯는 과정)
+        : content: "아니, 이미 객체야"라고 하면, 변환하지 않고 그대로 사용합니다.
+        */
         const parsed = typeof content === "string" ? JSON.parse(content) : content;
 
         if (!Array.isArray(parsed)) {
@@ -27,7 +32,14 @@ const extractTextFromContent = (content: string | any[], maxChars = 200 ) => {
         }
 
         let result = "";
-
+        /*
+        for (const block of parsed):
+        "전체 본문에서 큰 덩어리(문단, 이미지, 리스트 등)를 하나씩 꺼내보자."
+        if (Array.isArray(block.content)):
+        "이 덩어리 안에 실제 내용(content)이 배열 형태로 들어있니?" (글자가 들어있는 바구니인지 확인)
+        for (const child of block.content):
+        "바구니 안에 있는 작은 알맹이들을 하나씩 꺼내서, 만약 **text**가 들어있다면 result라는 변수에 차곡차곡 이어 붙여!"
+        */
         for (const block of parsed) {
             if (Array.isArray(block.content)) {
                 for (const child of block.content) {
@@ -77,10 +89,16 @@ export function NewTopicCard({props}: Props) {
     const navigate = useNavigate();
     const [nickname, setNickname] = useState<string>("");
 
-    const fetchAuthEmail = async () => {
+    // 💡 개선 1: 본문 텍스트 추출을 useMemo로 최적화
+    // props.content가 바뀌지 않는 한, 복잡한 파싱 로직을 다시 실행하지 않습니다.
+    const previewText = useMemo(() => {
+        return extractTextFromContent(props.content);
+    }, [props.content]);
+
+    const fetchAuthEmail = useCallback( async () => {
         const nicknameDB = await findUserById(props.author);
         setNickname(nicknameDB || "알 수 없는 사용자");
-    }
+    }, [props.author]);
     //최초 한번 호출
     useEffect(() => {
         fetchAuthEmail();
@@ -134,9 +152,9 @@ rgba(59, 130, 246, 0.2): 파란색(59, 130, 246)을 20% 투명도로 섞은 것�
                     <CaseSensitive size={16} className="text-muted-foreground" />
                     <p>{props.title}</p>
                 </h3>
-                {/* 본문내용 */}
+                {/* 본문내용extractTextFromContent( props.content ) */}
                 <p className="line-clamp-3 text-muted-foreground">
-                    { extractTextFromContent( props.content )}
+                    { previewText}
                 </p>
             </div>
             <img src={props.thumbnail} alt="@THUMBNAIL" className="w-[140px] h-[140px] aspect-square rounded-lg object-cover" />

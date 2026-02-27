@@ -11,7 +11,7 @@ import {
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
 import { useAuthStore } from "@/stores";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ export function AppDraftsDialog({children} : Props) {
     const user = useAuthStore((state) => state.user);
     const navigate = useNavigate();
     const [drafts, setDrafts] = useState<any[]>([]);
-    const fetchDrafts = async () => {
+    const fetchDrafts = useCallback( async () => {
         if(!user?.id) return;
         try{
             const { data: topics, error} = await supabase.from("topic").select("*").eq("author", user.id).eq('status', TOPIC_STATUS.TEMP);
@@ -43,20 +43,20 @@ export function AppDraftsDialog({children} : Props) {
             }
         }
         catch(error){
-            throw new Error('${error}');
+            throw new Error(`${error}`);
         }
-    };
+    }, [user?.id]);// 유저가 바뀔 때만 함수가 새로 만들어짐
 
     //최초의 한번 호출
     useEffect(() => 
     {
         if(user){ fetchDrafts();}else { return;} ;
-    }, []);
+    }, [fetchDrafts, user]);
 
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-md">
                 <DialogHeader>
                     <DialogTitle>임시 저장된 블로그</DialogTitle>
                     <DialogDescription>
@@ -75,7 +75,7 @@ export function AppDraftsDialog({children} : Props) {
                         {drafts.map((draft: Topic, index : number) => {
                         return (
                             
-                                <div className="w-full flex items-center justify-between py-2 px-4 gap-3 hover:bg-gray-800 bg-card/50 rounded-md cursor-pointer" onClick={() => navigate(`/topics/${draft.id}/create`)}>
+                                <div key={draft.id} className="w-full flex items-center justify-between py-2 px-4 gap-3 hover:bg-gray-800 bg-card/50 rounded-md cursor-pointer" onClick={() => navigate(`/topics/${draft.id}/create`)}>
                                     <div className="flex items-start gap-2">
                                         <Badge className="w-5 h-5 rounded-sm aspect-square text-foreground  bg-blue-500 hover:bg-blue-500 " >{index + 1}</Badge>{/*aspect-square 정사각형 */}
                                         <div className="flex flex-col">

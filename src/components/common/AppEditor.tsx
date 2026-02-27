@@ -19,6 +19,7 @@ interface Props {
 export function AppEditor({ props, setContent, readonly }: Props) {
     const locale = ko;
     // Create a new editor instance
+    //dictionary 설정 등을 메모이제이션해서 불필요한 에디터 재생성 방지
     const editor = useCreateBlockNote({
         initialContent:
             props && props.length > 0
